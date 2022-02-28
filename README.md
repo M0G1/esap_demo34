@@ -1,4 +1,4 @@
-# esap_demo34 Скриншоты для третьей лабы:
+# esap_demo34 Скриншоты для третьей лабораторное:
 ![alt text](screenshots/1.png)
 ![alt text](screenshots/2.png)
 ![alt text](screenshots/3.png)
