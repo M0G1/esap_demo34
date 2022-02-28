@@ -1,5 +1,6 @@
 package com.example.esap_demo4.service;
 
+import com.example.esap_demo4.jms.Sender;
 import com.example.esap_demo4.model.*;
 import com.example.esap_demo4.repository.GymRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Repository
-@Transactional
+@Transactional // ano repo is deleted
 public class GymService {
 
     @Autowired
     private GymRepository gymRepository;
+    @Autowired
+    private Sender sender;
 
     public void create(Gym gym) {
         gymRepository.save(gym);
+        //  ====== SENDER ======
+        sender.sendInsert(gym, gym.getId());
     }
 
     public Gym get(Long id) {
@@ -31,17 +35,24 @@ public class GymService {
         return gymRepository.findAll().stream().sorted(Comparator.comparing(Gym::getAddress)).collect(Collectors.toList());
     }
 
-    public void update(Long id, Gym newGym) {
-        Gym gym = gymRepository.findById(id).get();
+    public void update(Long gymId, Gym newGym) {
+        Gym gym = gymRepository.findById(gymId).get();
+        Gym temp = new Gym(gym.getAddress(), gym.getOpenTime(), gym.getGymNum(), gym.getPasses());
         gym.setGymNum(newGym.getGymNum());
         gym.setAddress(newGym.getAddress());
         gym.setOpenTime(newGym.getOpenTime());
         gymRepository.save(gym);
-        // не умеем ставить id так бы покороче было бы
+        //  ====== SENDER ======
+        sender.sendUpdate(temp, gym, gymId);
     }
 
-    public void delete(Long id) {
-        gymRepository.deleteById(id);
+    public void delete(Long gymId) {
+        Gym gym = gymRepository.findById(gymId).get();
+        gymRepository.deleteById(gymId);
+        //  ====== SENDER ======
+        gym.getPasses().forEach(seasonPass -> sender.sendDelete(seasonPass, seasonPass.getId()));
+        sender.sendDelete(gym, gymId);
+
     }
 
     public List<SeasonPass> getSeasonPasses(Long id) {

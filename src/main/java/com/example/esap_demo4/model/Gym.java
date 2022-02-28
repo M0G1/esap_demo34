@@ -6,7 +6,9 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Gym implements Serializable {
+public class Gym  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "sequenceGenerator")
 //    @SequenceGenerator(name = "sequenceGenerator", sequenceName = "gym_id_seq", allocationSize = 1)
@@ -44,5 +46,26 @@ public class Gym implements Serializable {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+
+    @Override
+    public String toString() {
+        return toMap().toString();
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("address", address);
+        map.put("openTime", openTime);
+        map.put("gymNum", gymNum.toString());
+        return map;
+    }
+
+    public Gym(String address, String openTime, Integer gymNum, List<SeasonPass> passes) {
+        this.address = address;
+        this.openTime = openTime;
+        this.gymNum = gymNum;
+        this.passes = passes;
     }
 }

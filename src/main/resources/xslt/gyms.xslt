@@ -55,6 +55,7 @@
                     </td>
                     <td>
                         <xsl:value-of select="passes" />
+<!--                        <xsl:apply-templates select="passes"/>-->
                     </td>
                 </tr>
             </xsl:for-each>
@@ -67,7 +68,7 @@
                 <tr>
                     <th>Id</th>
                     <th>Full name</th>
-                    <th>Duration months</th>
+                    <th>Duration Month</th>
                 </tr>
             </thead>
             <xsl:for-each select="item">
@@ -79,11 +80,10 @@
                         <xsl:value-of select="fullName" />
                     </td>
                     <td>
-                        <xsl:value-of select="durationM" />
+                        <xsl:apply-templates select="durationM"/>
                     </td>
                 </tr>
             </xsl:for-each>
         </table>
     </xsl:template>
-
 </xsl:stylesheet>

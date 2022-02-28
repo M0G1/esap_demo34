@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "season_pass")
@@ -32,4 +34,23 @@ public class SeasonPass implements Serializable {
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
+
+    @Override
+    public String toString() {
+        return toMap().toString();
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("fullName", fullName);
+        map.put("durationM", durationM.toString());
+        map.put("gymID", gym.getId().toString());
+        return map;
+    }
+
+    public SeasonPass(String fullName, Integer durationM, Gym gym) {
+        this.fullName = fullName;
+        this.durationM = durationM;
+        this.gym = gym;
+    }
 }
